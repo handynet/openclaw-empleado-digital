@@ -9,6 +9,10 @@
 # ============================================================
 FROM ghcr.io/phioranex/openclaw-docker:latest
 
+# --- Cambiar a root para instalar herramientas del sistema ---
+USER root
+
+
 # --- Evitar prompts interactivos de apt/dpkg ---
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -64,3 +68,9 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 
 # --- Puerto interno (documentativo, NO se expone fuera) ---
 EXPOSE 18789
+
+# --- Volver al usuario por defecto (opcional, pero recomendado para seguridad) ---
+# Si el agente necesita ser root para usar apt-get, dejalo como root.
+# Por ahora lo dejamos como root para que el "SYSTEM_PROMPT" funcione sin problemas de permisos.
+USER root
+
