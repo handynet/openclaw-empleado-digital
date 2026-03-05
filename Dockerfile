@@ -69,8 +69,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 # --- Puerto interno ---
 EXPOSE 18789
 
-# --- Comando de inicio explícito ---
-# Forzamos el inicio del gateway en el puerto correcto.
-CMD ["openclaw", "gateway", "--port", "18789"]
+CMD ["gateway", "--port", "18789"]
 
 
