@@ -7,7 +7,7 @@
 #     ghcr.io/phioranex/openclaw-docker:latest  (community)
 #   o construye desde el repo: https://github.com/openclaw/openclaw
 # ============================================================
-FROM ghcr.io/openclaw/openclaw:main
+FROM ghcr.io/phioranex/openclaw-docker:latest
 
 # --- Evitar prompts interactivos de apt/dpkg ---
 ENV DEBIAN_FRONTEND=noninteractive
