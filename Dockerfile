@@ -44,17 +44,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # poppler-utils → utilidades PDF (pdftotext, pdfinfo, pdfimages, etc.)
 
 # --- Directorios persistentes ---
-# /workspace        → volumen montado, persiste entre reinicios
-# /workspace/venv   → virtualenv de Python (persistente)
-# /workspace/node   → npm global prefix (persistente)
-# /workspace/logs   → log de comandos ejecutados por el agente
-RUN mkdir -p /workspace/venv /workspace/node /workspace/logs
+RUN mkdir -p /root/.openclaw /workspace/venv /workspace/node /workspace/logs
 
-# --- Pre-crear virtualenv de Python en /workspace/venv ---
+# --- Pre-crear virtualenv de Python ---
 RUN python3 -m venv /workspace/venv
 
-# --- Configurar npm para usar /workspace/node como prefix ---
+# --- Configurar npm ---
 RUN npm config set prefix /workspace/node 2>/dev/null || true
+
+# --- Permisos: Asegurar que todo en /workspace sea accesible ---
+RUN chmod -R 777 /workspace /root/.openclaw
+
 
 # --- Variables de entorno para que pip/npm del agente usen el workspace ---
 ENV PATH="/workspace/venv/bin:/workspace/node/bin:${PATH}"
@@ -66,11 +66,11 @@ ENV NPM_CONFIG_PREFIX="/workspace/node"
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -sf http://localhost:${OPENCLAW_PORT:-18789}/ || exit 1
 
-# --- Puerto interno (documentativo, NO se expone fuera) ---
+# --- Puerto interno ---
 EXPOSE 18789
 
-# --- Volver al usuario por defecto (opcional, pero recomendado para seguridad) ---
-# Si el agente necesita ser root para usar apt-get, dejalo como root.
-# Por ahora lo dejamos como root para que el "SYSTEM_PROMPT" funcione sin problemas de permisos.
-USER root
+# --- Comando de inicio explícito ---
+# Forzamos el inicio del gateway en el puerto correcto.
+CMD ["openclaw", "gateway", "--port", "18789"]
+
 
