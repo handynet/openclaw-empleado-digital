@@ -69,6 +69,9 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 # --- Puerto interno ---
 EXPOSE 18789
 
-CMD ["gateway", "--port", "18789", "--host", "0.0.0.0", "--allow-unconfigured"]
+# --- Bind to all interfaces ---
+ENV OPENCLAW_GATEWAY_BIND=lan
+
+CMD ["gateway", "--port", "18789", "--allow-unconfigured"]
 
 
